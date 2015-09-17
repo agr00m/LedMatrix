@@ -4,11 +4,12 @@ LedMatrix is an Arduino Uno library for controlling multiple MAX7219 and MAX7221
 
 Documentation
 -------------
-
+https://github.com/agr00m/LedMatrixSPI/wiki
+Also included in the library folder.
 
 Download
 --------
-
+https://github.com/agr00m/LedMatrixSPI
 
 Install
 -------
