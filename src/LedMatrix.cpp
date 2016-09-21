@@ -106,7 +106,7 @@ void LedMatrix::setLed(uint8_t x, uint8_t y, bool val) {
    }
    uint8_t dispRow = y / 8;   // Int math for floor(y/8)
    uint8_t dispCol = x / 8;   // Int math for floor(x/8)
-   uint8_t index = 8*(dispCol+dispRow*(DISP_COLS-1))+y;   // Calc pixels index
+   uint16_t index = 8*(dispCol+dispRow*(DISP_COLS-1))+y;   // Calc pixels index
    // The bits are set in reverse order due to 8x8 displays being backwards
    if(val) {
       SETBIT(pixels[index], x%8);
@@ -116,7 +116,7 @@ void LedMatrix::setLed(uint8_t x, uint8_t y, bool val) {
 }
 
 void LedMatrix::clear(void) {
-   for (uint8_t i = 0; i < NUM_DEVICES * 8; i++) {
+   for (uint16_t i = 0; i < NUM_DEVICES * 8; i++) {
       pixels[i] = 0x00;
    }
 }

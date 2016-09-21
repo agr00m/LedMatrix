@@ -4,41 +4,49 @@
  * Author:  Aaron Groom
  * Date:    08-07-2015
  * 
- * Example sketch demonstrating how to scroll text
- * using the LedMatrix library.
+ * Demonstrating how to scroll text using the LedMatrix library.
  * 
- * The default pins used are:
- *    Data:    pin 12
- *    Clock:   pin 11
- *    CS/Load: pin 10
+ * Pins used are:
+ *    CS/Load: Digital pin 10
+ *    Data:    Digital pin 11
+ *    Clock:   Digital pin 13
  */
 
+// Comment out if using the non-SPI version of the library
+#define SPIWrite
+
 // Include the LedMatrix library
+#ifdef SPIWrite
+#include <LedMatrixSPI.h>
+#else
 #include <LedMatrix.h>
+#endif
 
 // Defines the number of 8x8 display rows and columns
-const byte NUM_ROWS = 4;
-const byte NUM_COLS = 4;
+const byte NUM_ROWS = 6;
+const byte NUM_COLS = 8;
 
 /*
- Create an LedMarix object
- The first parameter is the number of 8x8 dot matrix
- rows, the second is the number of columns. 
-*/
+ * Create an LedMarix object
+ * The first parameter is the number of 8x8 dot matrix
+ * rows, the second is the number of columns. 
+ */
+#ifdef SPIWrite
+LedMatrixSPI lm = LedMatrixSPI(NUM_ROWS, NUM_COLS);
+#else
 LedMatrix lm = LedMatrix(NUM_ROWS, NUM_COLS);
-
+#endif
 /* 
- Enter the text you want to scroll. Leave a few blank spaces
- at the end for an easy way to scroll off the screen.
+ * Enter the text you want to scroll. Leave a few blank spaces
+ * at the end for an easy way to scroll off the screen.
 */
-char text[] = "Hello World!    ";
+char text[] = "Hello World!          ";
 
 void setup() {
    // No setup required. Some options you can set are
-   lm.scrollDelay(2);      // Sets the delay for scrolling text. 0 = fastest
-   lm.setIntensity(4);     // Sets the LED intensity. Default is 1.
+   lm.scrollDelay(5);      // Sets the delay for scrolling text. 0 = fastest
+   lm.setIntensity(1);     // Sets the LED intensity. Default is 1.
    lm.setFont(FONT8x8);    // Sets the char font. Either FONT8x8 (default) or FONT5x7. 
-   
 }
 
 void loop() {
@@ -46,26 +54,25 @@ void loop() {
    // Uses the built-in scrollText() function
    scrollText();     
 
-   // Demonstrates an alternate method using the dispChar() function
-   scrollText2();    
-   
+   // An alternate method using the dispChar() function
+   altScrollText();
 }
 
 /* 
- The scrollChar function works by scrolling a single character onto 
- the screen. The spaces between characters is already accounted for.
-*/
+ * The scrollChar function works by scrolling a single character onto 
+ * the screen. The spaces between characters is already accounted for.
+ */
 void scrollText() {
-   
+   lm.setFont(FONT8x8);
    // Loop through each character in the text[] array
    for (int i = 0; i < sizeof(text)-1; i++) {
 
       /* 
-       For each character, call the scrollChar() function.
-       scrollChar() has 2 arguements:
-         * character to scroll
-         * 8x8 dot matrix display row to scroll it on
-      */
+       * For each character, call the scrollChar() function.
+       * scrollChar(char, row) has 2 arguements:
+       *  - character to scroll
+       *  - 8x8 dot matrix display row to scroll it on (first row = 0)
+       */
       lm.scrollChar(text[i], 0);
    }
 
@@ -77,15 +84,15 @@ void scrollText() {
 }
 
 /*
- An alternate method of scrolling text using the dispChar() function. 
- Essentially this method works by writing the full string of text to 
- the display starting with it just off the right side of the screen. 
- It then redraws each character one column to the left until the entire 
- string has been displayed. 
-
- This method is much slower, but allows you to scroll text at any Y position.
+ * An alternate method of scrolling text using the dispChar() function. 
+ * Essentially this method works by writing the full string of text to 
+ * the display starting with it just off the right side of the screen. 
+ * It then redraws each character one column to the left until the entire 
+ * string has been displayed. 
+ * 
+ * This method is much slower, but allows you to scroll text at any Y position.
 */
-void scrollText2(){
+void altScrollText(){
 
    /* 
     Start drawing at the first x position off the display.
@@ -101,15 +108,15 @@ void scrollText2(){
          
          /* 
           drawChar() takes 3 parameters:
-            Character to draw
-            X position (left)
-            Y position (top)
+           - Character to draw
+           - X position (left)
+           - Y position (top)
           The y position will always stay the same (unless you want to try something funky)
           The x position of each character is determined by the starting x 
           position from the outer for loop plus the font width multiplied 
           by its location in the text array. 
          */
-         lm.drawChar(text[i], x + (FONT_8x8 * i), 0);
+         lm.drawChar(text[i], x + (FONT8x8 * i), 0);
       }
       lm.update();      // update() must be called to redraw the display
       delay(2);         // This sets the scroll speed
@@ -122,10 +129,10 @@ void scrollText2(){
     one to the font width.
    */
    lm.setFont(FONT5x7);
-   for (int x = NUM_COLS * 8; x >= -sizeof(text)*(FONT_5x7 + 1); x--) {  
+   for (int x = NUM_COLS * 8; x >= -sizeof(text)*(FONT5x7 + 1); x--) {  
       lm.clear();
       for (int i = 0; i < sizeof(text)-1; i++) {
-         lm.drawChar(text[i], x + ((FONT_5x7 + 1) * i), 8);
+         lm.drawChar(text[i], x + ((FONT5x7 + 1) * i), 8);
       }
       lm.update();
       delay(2);

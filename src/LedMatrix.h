@@ -49,7 +49,7 @@ SOFTWARE.
    however, the ATmega328 only has 2k of dynamic memory so only about 190
    can be used before running out of memory.
 */
-#define MAX_DEVICES     32
+#define MAX_DEVICES     48
 
 class LedMatrix {
 
