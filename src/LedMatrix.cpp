@@ -130,7 +130,7 @@ void LedMatrix::scrollDelay(uint8_t val) {
 	sDelay = val;
 }
 
-void LedMatrix::drawChar(char c, uint8_t x, uint8_t y) {
+void LedMatrix::printChar(char c, uint8_t x, uint8_t y) {
    int8_t fHeight, rows, offset; 
    bufferChar(c);
    for (uint8_t col = 0; col < font; col++) { 
