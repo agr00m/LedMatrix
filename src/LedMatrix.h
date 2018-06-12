@@ -121,12 +121,12 @@ class LedMatrix {
 		void scrollDelay(uint8_t val);
       
       /* 
-       * Draws a single character.
+       * Prints a single character.
        * @param   c           Character to draw
        * @param   x           X coordinate of the top left corner
        * @param   y           Y coordinate of the top left corner
        */
-      void drawChar(char c, uint8_t x, uint8_t y);
+      void printChar(char c, uint8_t x, uint8_t y);
       
       /* 
        * Scrolls a single character onto the matrix from the right to left
